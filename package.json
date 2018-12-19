@@ -1,7 +1,7 @@
 {
   "name": "@typhonjs/babel-parser",
-  "version": "0.0.1",
-  "description": "Provides a front end for loading code for AST generation by Babel parser with TyphonJS plugin support.",
+  "version": "0.1.0",
+  "description": "Provides a front end for loading code for Javascript / Typescript AST generation by Babel parser with TyphonJS plugin support.",
   "homepage": "https://github.com/typhonjs-node-ast/babel-parser",
   "license": "MPL-2.0",
   "author": {
