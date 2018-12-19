@@ -45,7 +45,7 @@ const parserOptions = { plugins: [<any parser options desired to be enabled>] };
 const ast = BabelParser.parseSource(`<some JS or Typescript source code>`, parserOptions);
 
 // Basic usage with default options, but with an override to disable Typescript and enable Flow plugins
-const ast = BabelParser.parseSource(`<some JS or Typescript source code>`, void 0, { flow: true });
+const ast = BabelParser.parseSource(`<some JS w/ Flow typing>`, void 0, { flow: true });
 
 
 // A convenience method is available to load a file and parse it.
