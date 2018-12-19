@@ -6,70 +6,66 @@ suite('babel-parser:', () =>
 {
    suite('BabelParser:', () =>
    {
-      test('parseFile function is exported', () =>
+      test('parse function is exported', () =>
       {
-         assert.isFunction(BabelParser.parseFile);
+         assert.isFunction(BabelParser.parse);
       });
 
-      test('parseSource function is exported', () =>
+      test('parse - ES6', () =>
       {
-         assert.isFunction(BabelParser.parseSource);
-      });
-
-      test('parseFile - ES6', () =>
-      {
-         const ast = BabelParser.parseFile('./test/fixture/es6.js');
+         const ast = BabelParser.parse('export default class Foo { constructor() { } }');
          assert.isObject(ast);
          assert.strictEqual(ast.type, 'File');
       });
 
-      test('parseFile - Typescript', () =>
+      test('parse - Typescript', () =>
       {
-         const ast = BabelParser.parseFile('./test/fixture/typescript.ts');
+         const ast = BabelParser.parse('function fooGood<T extends { x: number }>(obj: T): T { console.log(Math.abs(obj.x)); return obj; }');
          assert.isObject(ast);
          assert.strictEqual(ast.type, 'File');
       });
 
-      test('parseFile - No flow override', () =>
+      test('parse - Decorator before export throws', () =>
       {
          assert.throws(() =>
          {
-            BabelParser.parseFile('./test/fixture/flow.js');
+            BabelParser.parse('@decorator export class MyClass {}');
          });
       });
 
-      test('parseFile - Flow override', () =>
+      test('parse - Decorator before export with override', () =>
       {
-         const ast = BabelParser.parseFile('./test/fixture/flow.js', void 0, { flow: true });
+         const ast = BabelParser.parse('@decorator export class MyClass {}', void 0, { decoratorsBeforeExport: true });
          assert.isObject(ast);
          assert.strictEqual(ast.type, 'File');
       });
 
-      test('parseSource - ES6', () =>
-      {
-         const ast = BabelParser.parseSource('export default class Foo { constructor() { } }');
-         assert.isObject(ast);
-         assert.strictEqual(ast.type, 'File');
-      });
-
-      test('parseSource - Typescript', () =>
-      {
-         const ast = BabelParser.parseSource('function fooGood<T extends { x: number }>(obj: T): T { console.log(Math.abs(obj.x)); return obj; }');
-         assert.isObject(ast);
-         assert.strictEqual(ast.type, 'File');
-      });
-
-      test('parseSource - No flow override', () =>
+      test('parse - No decorators legacy override', () =>
       {
          assert.throws(() =>
          {
-            BabelParser.parseSource('function fooGood<T: { x: number }>(obj: T): T { console.log(Math.abs(obj.x)); return obj; }');
+            BabelParser.parse('class MyClass { @getDecorators().methods[name] foo() {} }');
          });
       });
 
-      test('parseSource - Flow override', () =>
+      test('parse - Decorators legacy override', () =>
       {
-         const ast = BabelParser.parseSource('function fooGood<T: { x: number }>(obj: T): T { console.log(Math.abs(obj.x)); return obj; }', void 0, { flow: true });
+         const ast = BabelParser.parse('class MyClass { @getDecorators().methods[name] foo() {} }', void 0, { decoratorsLegacy: true });
+         assert.isObject(ast);
+         assert.strictEqual(ast.type, 'File');
+      });
+
+      test('parse - No flow override', () =>
+      {
+         assert.throws(() =>
+         {
+            BabelParser.parse('function fooGood<T: { x: number }>(obj: T): T { console.log(Math.abs(obj.x)); return obj; }');
+         });
+      });
+
+      test('parse - Flow override', () =>
+      {
+         const ast = BabelParser.parse('function fooGood<T: { x: number }>(obj: T): T { console.log(Math.abs(obj.x)); return obj; }', void 0, { flow: true });
          assert.isObject(ast);
          assert.strictEqual(ast.type, 'File');
       });
